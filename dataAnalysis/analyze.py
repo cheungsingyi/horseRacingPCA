@@ -5,6 +5,15 @@ import matplotlib as mpl
 import scipy
 
 class analyze:
+	colors = [	'yellow', 'silver', 'brown', 
+			'red', 'red', 'red', 'red', 
+			'red', 'red', 'red', 'red', 
+			'red', 'red', 'red', 'red', 
+			'red'	]
+
+	levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+
+
 	def __init__(self):
 		dataSource = getHorseData()
 		self.raceData, self.raceDataNoNames = dataSource.getCSVData()
@@ -181,33 +190,20 @@ Helpful pages in the course reader:
 
 '''
 
-'''
-X = np.array([	[5.1, 3.5, 1.4, 0.2, 1], 
-				[4.9, 3.0, 1.4, 0.2, 1],
-				[4.7, 3.2, 1.3, 0.2, 1],
-				[7.0, 3.2, 4.7, 1.4, 2],
-				[6.4, 3.2, 4.5, 1.5, 2],
-				[6.9, 3.1, 4.9, 1.5, 2],
-				[6.3, 3.3, 6.0, 2.5, 3],
-				[5.8, 2.7, 5.1, 1.9, 3],
-				[7.1, 3.0, 5.9, 2.1, 3]])
-
-Y = np.array([	[1, 2, 7],
-				[3, 5, 4], 
-				[5, 7, 6], 
-				[5, 2, 2]])
-'''
 
 #plots odds v position
 
-'''
+
 test = analyze()
 xlabel = 'Position'
 ylabel = 'Odds'
-print test.raceDataNoNames[:,[1,3]]
 X = test.raceDataNoNames[:,[1,3]].astype(float)
 
-test.scatterPlot(X[:,1], X[:,0], xlabel, ylabel)
+plt.scatter(X[:,1], X[:,0])
+plt.xlabel(xlabel)
+plt.ylabel(ylabel)
+plt.title("Odds v. Finishing Position")
+plt.show()
 
 
 #print test.findS(Y)
@@ -215,22 +211,10 @@ test.scatterPlot(X[:,1], X[:,0], xlabel, ylabel)
 #print test.PCA(X, 'cov')
 #test.plotAllColumns(Y)
 
-
-
-
-
-x = np.array([1, 2, 3, 4, 5])
-y = np.array([1, 4, 9, 16, 25])
-ylabel = "power of 2"
-xlabel = "base"
-
-test.scatterPlot(x, y, xlabel, ylabel)
-'''
-
 #####################
 #Least Squares of Odds v. Position (means and sigmas)
 #####################
-'''
+
 test = analyze()
 means, sigmas = test.meansStdsOddsPositions()
 
@@ -241,16 +225,12 @@ for i in range(0, 14):
 	A[i][0] = i + 1
 	A[i][1] = 1
 	b[i][0] = means[i]
-print A
-print b
 
 z = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)),A.T), b)
 
-print z
 regressY = []
 for i in range(0,14):
 	regressY.append(i*z[0][0] + z[1][0])
-print regressY
 
 X = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 plt.plot(X, regressY, c = [1, 0, 0])
@@ -263,7 +243,8 @@ plt.xlabel(xlabel)
 plt.ylabel(ylabel)
 plt.title(title)
 plt.show()
-'''
+
+
 ######################
 ######################
 ######################
@@ -294,19 +275,11 @@ for i in range(0, n):
 	y.append(temp[1]) # PC 2
 
 
-colors = [	'yellow', 'silver', 'brown', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red'	]
-
-levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-
-cmap, norm = mpl.colors.from_levels_and_colors(levels=levels, colors=colors, extend='max')
+cmap, norm = mpl.colors.from_levels_and_colors(levels=test.levels, colors=test.colors, extend='max')
 plt.scatter(x,y,c=test.positions, edgecolor='none', cmap=cmap, norm=norm)
 xlabel = "PC 1 - Career Starts, 1sts, 2nds, 3rds"
 ylabel = "PC 2 - Career EPS, Current Year EPS"
-title = "Average Pre-Race Odds vs. Final Position"
+title = "PCA 1 - Individual Horse Statistics"
 plt.xlabel(xlabel)
 plt.ylabel(ylabel)
 plt.title(title)
@@ -345,7 +318,6 @@ for i in range(0, n):
 	whole[i][8] = showRatio
 
 half1, half2 = np.array_split(whole, [halfway])
-print "HALVED?"
 nh1, p = half1.shape
 nh2, p = half2.shape
 
@@ -377,18 +349,8 @@ for i in range(0, nh1):
 
 
 #finally plotting the results from PCAs
-colors = [	'yellow', 'silver', 'brown', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red'	]
 
-levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-
-print len(positionsHalf1)
-print len(x)
-print len(y)
-cmap, norm = mpl.colors.from_levels_and_colors(levels=levels, colors=colors, extend='max')
+cmap, norm = mpl.colors.from_levels_and_colors(levels=halving.levels, colors=halving.colors, extend='max')
 plt.scatter(x,y,c=positionsHalf1, edgecolor='none', cmap=cmap, norm=norm)
 xlabel = "PC 1 - 1sts, Show %"
 ylabel = "PC 2 - nWorkouts, Workout Performance (position compared to others)"
@@ -410,12 +372,19 @@ predictedAShow = 0
 predicted2Shows = 0
 predicted3Shows = 0
 
+predictedAShownn = 0
+predicted2Showsnn = 0
+predicted3Showsnn = 0
+
 cap = 0
 while(i < 3270): #the amount of horses I have
 #while(i < 3270):
 	x2 = []
 	y2 = []
 	pos2 = []
+	x2nn = []
+	y2nn = []
+
 	raceN = test.raceData[i][7]
 	while(test.raceData[i][7] == raceN):
 		if (test.raceData[i][0] in halving.namesNoSale):
@@ -426,15 +395,15 @@ while(i < 3270): #the amount of horses I have
 			temp = np.dot(tempRowN, ab)
 			x2.append(temp[0]) # PC 1
 			y2.append(temp[1]) # PC 2
+			tempnn = np.dot(tempRow, ab)
+			x2nn.append(tempnn[0])
+			y2nn.append(tempnn[1])
 		i += 1
 	totalRaces += 1
-	sortedx2 = x2[:]
-	sortedx2.sort()
 	tmp_showsInARace = 0
 	tmp_predictedAShow = 0
 
 	poslen = len(pos2)
-	print pos2
 	j = 0
 	while( j < poslen and float(pos2[j]) < 4 ):
 		greaterCount = 0
@@ -449,22 +418,37 @@ while(i < 3270): #the amount of horses I have
 
 	if(tmp_showsInARace > 0):
 		predictedAShow += 1
-		print "1 SHOW"
 		if(tmp_showsInARace > 1):
 			predicted2Shows += 1
-			print "2 SHOWS"
 			if(tmp_showsInARace > 2):
 				predicted3Shows += 1
-				print "3 SHOWS"
-	if (cap < 6):
-		colors = [	'yellow', 'silver', 'brown', 
-				'red', 'red', 'red', 'red', 
-				'red', 'red', 'red', 'red', 
-				'red', 'red', 'red', 'red', 
-				'red'	]
 
-		levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-		cmap, norm = mpl.colors.from_levels_and_colors(levels=levels, colors=colors, extend='max')
+	#measuring same stats but for a not normalized projection back on the PCs
+	tmp_showsInARacenn = 0
+	tmp_predictedAShownn = 0
+
+	poslen = len(pos2)
+	j = 0
+	while( j < poslen and float(pos2[j]) < 4 ):
+		greaterCount = 0
+		for j2 in range(0,poslen):
+			if (float(x2nn[j2]) > float(x2nn[j])):
+				greaterCount += 1
+		if (greaterCount < 3):
+			tmp_showsInARacenn += 1
+		j += 1
+
+	#update the correct amount of shows in the race
+
+	if(tmp_showsInARacenn > 0):
+		predictedAShownn += 1
+		if(tmp_showsInARacenn > 1):
+			predicted2Showsnn += 1
+			if(tmp_showsInARacenn > 2):
+				predicted3Showsnn += 1
+
+	if (cap < 6):
+		cmap, norm = mpl.colors.from_levels_and_colors(levels=halving.levels, colors=halving.colors, extend='max')
 		plt.scatter(x2,y2,c=pos2, edgecolor='none', cmap=cmap, norm=norm)
 		xlabel = "PC 1 - 1sts, Show %"
 		ylabel = "PC 2 - nWorkouts, Workout Performance (position compared to others)"
@@ -473,6 +457,17 @@ while(i < 3270): #the amount of horses I have
 		plt.ylabel(ylabel)
 		plt.title(title)
 		plt.show()
+
+		#not normalized projection
+		plt.scatter(x2nn,y2nn,c=pos2, edgecolor='none', cmap=cmap, norm=norm)
+		xlabel = "PC 1 - 1sts, Show %"
+		ylabel = "PC 2 - nWorkouts, Workout Performance (position compared to others)"
+		title = "Half-PCA, Non-normalized Projection - Race: " + str(raceN)	
+		plt.xlabel(xlabel)
+		plt.ylabel(ylabel)
+		plt.title(title)
+		plt.show()
+
 		cap += 1
 
 predictedAShowRatio = float(predictedAShow)/float(totalRaces)
@@ -480,8 +475,14 @@ predicted2ShowsRatio = float(predicted2Shows)/float(totalRaces)
 predicted3ShowsRatio = float(predicted3Shows)/float(totalRaces)
 print "predictedAShow Ratio: %f" % predictedAShowRatio
 print "predicted2Shows Ratio: %f" % predicted2ShowsRatio
-print "predicted3Shows Ratio: %f" % predicted3ShowsRatio
+print "predicted3Shows Ratio: %f\n" % predicted3ShowsRatio
 
+predictedAShowRationn = float(predictedAShownn)/float(totalRaces)
+predicted2ShowsRationn = float(predicted2Showsnn)/float(totalRaces)
+predicted3ShowsRationn = float(predicted3Showsnn)/float(totalRaces)
+print "predictedAShownn Ratio: %f" % predictedAShowRationn
+print "predicted2Showsnn Ratio: %f" % predicted2ShowsRationn
+print "predicted3Showsnn Ratio: %f" % predicted3ShowsRationn
 
 
 
@@ -589,7 +590,6 @@ b = -1 * b
 print "First PC flipped: \n%s\n" % a
 print "Second PC flipped: \n%s\n" % b
 n, p = masterData2.shape
-print n,p
 ab = np.column_stack((a.flatten(), b.flatten()))
 x = []
 y = []
@@ -603,39 +603,14 @@ for i in range(0, n):
 
 positions2 = test.positions[:]
 
-#first remove pesky outliers...
-#nPoints = len(x)
-#xThresh = -7
-#yThresh = -7
-#pointsRemoved = 0
-#for i in range(0, nPoints):
-#	if (i == nPoints - pointsRemoved):
-#		break
-	#check if x or y is below a certain threshold
-	#if it is too low, remove that element and remove that element from positions as well
-	#if(x[i] < xThresh or y[i] < yThresh):
-	#	print i
-	#	del x[i]
-	#	del y[i]
-	#	del positions[i]
-	#	i -= 1
-	#	pointsRemoved += 1
-
 
 #finally plotting the results from PCAs
-colors = [	'yellow', 'silver', 'brown', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red'	]
 
-levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-
-cmap, norm = mpl.colors.from_levels_and_colors(levels=levels, colors=colors, extend='max')
+cmap, norm = mpl.colors.from_levels_and_colors(levels=test.levels, colors=test.colors, extend='max')
 plt.scatter(x,y,c=positions2, edgecolor='none', cmap=cmap, norm=norm)
 xlabel = "PC 1 - 1sts, Show %"
-ylabel = "PC 2 - nWorkouts, Workout Performance (position compared to others)"
-title = "PCA Master 2 - nWorkouts, Workout Performance v. 1sts, Show %"
+ylabel = "PC 2 - nWorkouts, Workout Performance"
+title = "PCA 2 - nWorkouts, Workout Performance v. 1sts, Show %"
 plt.xlabel(xlabel)
 plt.ylabel(ylabel)
 plt.title(title)
@@ -678,7 +653,6 @@ while(i < 3270):
 	tmp_showsInARace = 0
 
 	poslen = len(pos2)
-	print pos2
 	j = 0
 	while( j < poslen and float(pos2[j]) < 4 ):
 		greaterCount = 0
@@ -693,31 +667,22 @@ while(i < 3270):
 
 	if(tmp_showsInARace > 0):
 		predictedAShow += 1
-		print "1 SHOW"
 		if(tmp_showsInARace > 1):
 			predicted2Shows += 1
-			print "2 SHOWS"
 			if(tmp_showsInARace > 2):
 				predicted3Shows += 1
-				print "3 SHOWS"
 
-	colors = [	'yellow', 'silver', 'brown', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red'	]
-
-	levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-	cmap, norm = mpl.colors.from_levels_and_colors(levels=levels, colors=colors, extend='max')
-	#plt.scatter(x2,y2,c=pos2, edgecolor='none', cmap=cmap, norm=norm)
-	xlabel = "PC 1 - 1sts, Show %"
-	ylabel = "PC 2 - nWorkouts, Workout Performance (position compared to others)"
-	title = "Price Race: " + str(raceN)	
-	#plt.xlabel(xlabel)
-	#plt.ylabel(ylabel)
-	#plt.title(title)
-	#plt.show()
-	cap += 1
+	if (cap < 6):
+		cmap, norm = mpl.colors.from_levels_and_colors(levels=test.levels, colors=test.colors, extend='max')
+		plt.scatter(x2,y2,c=pos2, edgecolor='none', cmap=cmap, norm=norm)
+		xlabel = "PC 1 - 1sts, Show %"
+		ylabel = "PC 2 - nWorkouts, Workout Performance (position compared to others)"
+		title = "PCA with Sale Price - Race: " + str(raceN)	
+		plt.xlabel(xlabel)
+		plt.ylabel(ylabel)
+		plt.title(title)
+		plt.show()
+		cap += 1
 
 predictedAShowRatio = float(predictedAShow)/float(totalRaces)
 predicted2ShowsRatio = float(predicted2Shows)/float(totalRaces)
@@ -781,7 +746,7 @@ plt.plot(x_shows,y_losers,c="red")
 
 xlabel = "PC 1 - 1sts, Show %"
 ylabel = "Percentage of total horses laying in graph > xTick"
-title = "PCA Master 2 - Percentage of Horses that Showed with PCA axes"
+title = "PCA 2 - Percentage of Horses that Showed with PC 1"
 plt.xlabel(xlabel)
 plt.ylabel(ylabel)
 plt.title(title)
@@ -798,7 +763,7 @@ plt.bar(x, y, align='center')
 #ax.set_xticks(x)
 #ax.set_xticklabels(['Losers', 'Shows', 'Firsts', 'Seconds', 'Thirds'])
 #ylabel = "Percentage of Horses With Projection on PC 1 > 0.5"
-title = "PCA Master 2 - Horse Performance Relative to PC 1"
+title = "PCA 2 - Horse Performance Relative to PC 1"
 
 #f.ylabel(ylabel)
 plt.title(title)
@@ -857,7 +822,6 @@ b = -1 * b
 print "First PC flipped: \n%s\n" % a
 print "Second PC flipped: \n%s\n" % b
 n, p = masterData2NoSale.shape
-print n,p
 ab = np.column_stack((a.flatten(), b.flatten()))
 x = []
 y = []
@@ -871,37 +835,10 @@ for i in range(0, n):
 
 positions2NoSale = test.positionsNoSale[:]
 
-#first remove pesky outliers...
-#nPoints = len(x)
-#xThresh = -7
-#yThresh = -7
-#pointsRemoved = 0
-#for i in range(0, nPoints):
-#	if (i == nPoints - pointsRemoved):
-#		break
-	#check if x or y is below a certain threshold
-	#if it is too low, remove that element and remove that element from positions as well
-	#if(x[i] < xThresh or y[i] < yThresh):
-	#	print i
-	#	del x[i]
-	#	del y[i]
-	#	del positions[i]
-	#	i -= 1
-	#	pointsRemoved += 1
-
 
 #finally plotting the results from PCAs
-colors = [	'yellow', 'silver', 'brown', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red'	]
 
-levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-print len(positions2NoSale)
-print len(x)
-print len(y)
-cmap, norm = mpl.colors.from_levels_and_colors(levels=levels, colors=colors, extend='max')
+cmap, norm = mpl.colors.from_levels_and_colors(levels=test.levels, colors=test.colors, extend='max')
 plt.scatter(x,y,c=positions2NoSale, edgecolor='none', cmap=cmap, norm=norm)
 xlabel = "PC 1 - 1sts, Show %"
 ylabel = "PC 2 - nWorkouts, Workout Performance (position compared to others)"
@@ -941,13 +878,10 @@ while(i < 3270):
 			y2.append(temp[1]) # PC 2
 		i += 1
 	totalRaces += 1
-	sortedx2 = x2[:]
-	sortedx2.sort()
 	tmp_showsInARace = 0
 	tmp_predictedAShow = 0
 
 	poslen = len(pos2)
-	print pos2
 	j = 0
 	while( j < poslen and float(pos2[j]) < 4 ):
 		greaterCount = 0
@@ -962,31 +896,21 @@ while(i < 3270):
 
 	if(tmp_showsInARace > 0):
 		predictedAShow += 1
-		print "1 SHOW"
 		if(tmp_showsInARace > 1):
 			predicted2Shows += 1
-			print "2 SHOWS"
 			if(tmp_showsInARace > 2):
 				predicted3Shows += 1
-				print "3 SHOWS"
-
-	colors = [	'yellow', 'silver', 'brown', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red'	]
-
-	levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-	cmap, norm = mpl.colors.from_levels_and_colors(levels=levels, colors=colors, extend='max')
-	#plt.scatter(x2,y2,c=pos2, edgecolor='none', cmap=cmap, norm=norm)
-	xlabel = "PC 1 - 1sts, Show %"
-	ylabel = "PC 2 - nWorkouts, Workout Performance (position compared to others)"
-	title = "Race: " + str(raceN)	
-	#plt.xlabel(xlabel)
-	#plt.ylabel(ylabel)
-	#plt.title(title)
-	#plt.show()
-	#cap += 1
+	if(cap < 6):
+		cmap, norm = mpl.colors.from_levels_and_colors(levels=test.levels, colors=test.colors, extend='max')
+		plt.scatter(x2,y2,c=pos2, edgecolor='none', cmap=cmap, norm=norm)
+		xlabel = "PC 1 - 1sts, Show %"
+		ylabel = "PC 2 - nWorkouts, Workout Performance (position compared to others)"
+		title = "PCA - Without Sale Price, Full DataSet - Race: " + str(raceN)	
+		plt.xlabel(xlabel)
+		plt.ylabel(ylabel)
+		plt.title(title)
+		plt.show()
+		cap += 1
 
 predictedAShowRatio = float(predictedAShow)/float(totalRaces)
 predicted2ShowsRatio = float(predicted2Shows)/float(totalRaces)
@@ -1063,9 +987,9 @@ y = [y_losers[21], y_shows[21], y_firsts[21], y_seconds[21], y_thirds[21]]
 x = scipy.arange(5)
 #f = plt.figure()
 #ax = f.add_axes([0.1, 0.1, 0.8, 0.8])
-#ax.bar(x, y, align='center')
+plt.bar(x, y, align='center')
 #ax.set_xticks(x)
-ax.set_xticklabels(['Losers', 'Shows', 'Firsts', 'Seconds', 'Thirds'])
+#ax.set_xticklabels(['Losers', 'Shows', 'Firsts', 'Seconds', 'Thirds'])
 ylabel = "Percentage of Horses With Projection on PC 1 > 0.5"
 title = "PCA No Sale - Horse Performance Relative to PC 1"
 
@@ -1157,20 +1081,13 @@ positions = test.positions[:]
 
 
 #finally plotting the results from PCAs
-colors = [	'yellow', 'silver', 'brown', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red', 'red', 'red', 'red', 
-			'red'	]
 
-levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-
-cmap, norm = mpl.colors.from_levels_and_colors(levels=levels, colors=colors, extend='max')
+cmap, norm = mpl.colors.from_levels_and_colors(levels=test.levels, colors=test.colors, extend='max')
 
 plt.scatter(x,y,c=positions, edgecolor='none', cmap=cmap, norm=norm)
 xlabel = "PC 1 - EPS, Show %"
 ylabel = "PC 2 - Age, Auction Price"
-title = "PCA Master 3 - Age, Auction Price v. EPS, Show %"
+title = "PCA 3 - Age, Auction Price v. EPS, Show %"
 plt.xlabel(xlabel)
 plt.ylabel(ylabel)
 plt.title(title)

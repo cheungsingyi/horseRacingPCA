@@ -123,9 +123,6 @@ class getHorseData:
 
 
 		n,p = np.array(masterNoSale).shape
-		print "positions no sale: %d " % (len(positionsNoSale))
-		print "names dims: %s" % len(namesNoSale)
-		print "masterNoSale dims %d, %d" % (n,p)
 
 		return np.array(master), positions, names, np.array(masterNoSale), positionsNoSale, namesNoSale
 
